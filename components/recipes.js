@@ -7,7 +7,6 @@ import Animated ,{ FadeInDown, FadeOut } from 'react-native-reanimated';
 import Loading from '../components/loading';
 import CachedImage from '../helpers/image'
 import { useNavigation } from '@react-navigation/native';
-import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 
 
 

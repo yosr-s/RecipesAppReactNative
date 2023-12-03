@@ -62,7 +62,7 @@ export default function RecipeDetailScreen(props) {
 
     <Animated.View entering={FadeIn.delay(200).duration(1000)} className="w-full absolute flex-row justify-between items-center pt-14">
         <TouchableOpacity onPress={()=>navigation.goBack()} className="p-2 rounded-full ml-5 bg-white">
-            <ChevronLeftIcon size={hp(5)} strokeWidth={7} color="#fbbf24"/>
+            <ChevronLeftIcon size={hp(5)} strokeWidth={7} color="rgb(132 204 22)"/>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={()=>{setIsFavorite(!isFavorite)}} className="p-2 rounded-full mr-5 bg-white">
@@ -83,7 +83,7 @@ export default function RecipeDetailScreen(props) {
                     </Text>
                 </Animated.View>
                 <Animated.View  entering={FadeInDown.delay(100).duration(700).springify().damping(12)} className="flex-row justify-around">
-                    <View className="flex rounded-full bg-amber-300 p-2">
+                    <View className="flex rounded-full bg-lime-500 p-2">
                         <View style={{height:hp(6.5),width:hp(6.5)}} 
                         className="bg-white rounded-full flex items-center justify-center">
 
@@ -101,7 +101,7 @@ export default function RecipeDetailScreen(props) {
 
                     </View>
 
-                    <View className="flex rounded-full bg-amber-300 p-2">
+                    <View className="flex rounded-full bg-lime-500 p-2">
                         <View style={{height:hp(6.5),width:hp(6.5)}} 
                         className="bg-white rounded-full flex items-center justify-center">
 
@@ -119,7 +119,7 @@ export default function RecipeDetailScreen(props) {
 
                     </View>
 
-                    <View className="flex rounded-full bg-amber-300 p-2">
+                    <View className="flex rounded-full bg-lime-500 p-2">
                         <View style={{height:hp(6.5),width:hp(6.5)}} 
                         className="bg-white rounded-full flex items-center justify-center">
 
@@ -136,7 +136,7 @@ export default function RecipeDetailScreen(props) {
                         </View>
 
                     </View>
-                    <View className="flex rounded-full bg-amber-300 p-2">
+                    <View className="flex rounded-full bg-lime-500 p-2">
                         <View style={{height:hp(6.5),width:hp(6.5)}} 
                         className="bg-white rounded-full flex items-center justify-center">
 
@@ -168,7 +168,7 @@ export default function RecipeDetailScreen(props) {
                                 ingredientsIndexes(meal).map((index)=>{
                                     return(
                                         <View key={index} className="flex-row space-x-4">
-                                            <View style={{height:hp(1.5),width:hp(1.5)}} className="bg-amber-300 rounded-full">
+                                            <View style={{height:hp(1.5),width:hp(1.5)}} className="bg-lime-500 rounded-full">
                                             </View>
                                             <View className="flex-row space-x-2">
                                                 <Text style={{fontSize:hp(1.7)}} className="font-extrabold text-neutral-700">

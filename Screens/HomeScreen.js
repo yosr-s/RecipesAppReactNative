@@ -1,4 +1,4 @@
-import { View, Text, ScrollView ,Image, TextInput } from 'react-native'
+import { View, Text, ScrollView ,Image, TextInput , TouchableOpacity} from 'react-native'
 import React, { useEffect , useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -18,10 +18,23 @@ export default function HomeScreen() {
   const [activeCategory,setActiveCategory]=useState('Beef');
   const [categories,setCategories]=useState([]); 
   const [meals,setMeals]=useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(()=>{
     getCategories();
     getRecipes();
   },[])
+
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(`https://themealdb.com/api/json/v1/1/search.php?s=${searchQuery}`);
+      if (response && response.data) {
+        setMeals(response.data.meals);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleChangeCategory=category=>{
     getRecipes(category);
@@ -41,18 +54,16 @@ export default function HomeScreen() {
       console.log(err);
     }
   }
-  const getRecipes=async (category="Beef")=>{
-    try{
-      const response=await axios.get(`https://themealdb.com/api/json/v1/1/filter.php?c=${category}`);
-      //console.log(response.data);
-      if (response && response.data){
+   const getRecipes = async (category = 'Beef') => {
+    try {
+      const response = await axios.get(`https://themealdb.com/api/json/v1/1/filter.php?c=${category}`);
+      if (response && response.data) {
         setMeals(response.data.meals);
       }
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
   return (
     <View className="flex-1 bg-white">
       <StatusBar style="dark" />
@@ -73,17 +84,26 @@ export default function HomeScreen() {
                 <Text style={{fontSize:hp(3.8)}} className="font-semibold text-neutral-600">Make your own food,</Text>
               </View>
              <Text className="font-semibold text-neutral-600" style={{fontSize:hp(3.8)}}>
-              Stay at <Text className="text-amber-400">home</Text>
+              Stay at <Text className="text-lime-500">home</Text>
              </Text>
           </View>
          <View className="mx-4 flex-row items-center rounded-full bg-black/5 p-[6px]">
-          <TextInput placeholder='Search any recipe!'
-          placeholderTextColor={'gray'}
-          style={{fontSize:hp(1.7)}}
-          className='flex-1 text-base mb-1 pl-3 tracking-wider'/>
-          <View className="bg-white rounded-full p-3">
-            <MagnifyingGlassIcon size={hp(2.7)} color="gray" strokeWidth={3}/>
-          </View>
+         <TextInput
+            placeholder="Search any recipe!"
+            placeholderTextColor="gray"
+            style={{ fontSize: hp(2) }}
+            className="flex-1 text-base mb-1 pl-3 tracking-wider"
+            value={searchQuery}
+            onChangeText={(text) => setSearchQuery(text)}
+          />
+           <TouchableOpacity
+              style={{ padding: hp(1) }} 
+              onPress={handleSearch}
+            >
+              <View className="bg-white rounded-full p-3">
+                <MagnifyingGlassIcon size={hp(2.7)} color="gray" strokeWidth={3} />
+              </View>
+            </TouchableOpacity>
 
          </View>
          {/* Categories */}

@@ -15,7 +15,7 @@ export default function Categories({categories,activeCategory,handleChangeCatego
         contentContainerStyle={{paddingHorizontal:15}}>
             {categories.map((cat,index)=>{
               let isActive=activeCategory===cat.strCategory;
-              let activeButtonClass=isActive?' bg-amber-400':' bg-black/10';
+              let activeButtonClass=isActive?' bg-lime-500':' bg-black/10';
                 return(
                     <TouchableOpacity key={index}
                      style={{ alignItems: 'center', marginHorizontal: 4 }}
