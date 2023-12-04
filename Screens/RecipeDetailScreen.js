@@ -9,6 +9,12 @@ import Loading from '../components/loading';
 import { Square3Stack3DIcon } from 'react-native-heroicons/outline';
 import YoutubeIframe from 'react-native-youtube-iframe';
 import Animated ,{ FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
+import { db } from '../Firebase/firebase';
+import { ref, set, get,remove } from 'firebase/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 
 
 
@@ -16,6 +22,8 @@ import Animated ,{ FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
 export default function RecipeDetailScreen(props) {
     console.log(props.route.params);
     let item=props.route.params;
+    let email=props.route.params.email;
+    console.log("hohohohoho",email);
     const [isFavorite,setIsFavorite]=useState(false);
     const navigation=useNavigation();
     const [meal,setMeal]=useState(null);
@@ -47,6 +55,55 @@ export default function RecipeDetailScreen(props) {
         }
         return indexes;
       }
+      const likeMeal = async () => {
+        try {
+          const likedMealData = {
+            item,
+          };
+      
+          const likedMealId = item.idMeal;
+          const codmail = email.replace('.', '');
+      
+          const likedRef = ref(db, `liked/${codmail}/${likedMealId}`);
+      
+          const isMealLiked = await get(likedRef);
+      
+          if (isMealLiked.exists()) {
+            // Meal is already liked, so remove it
+            await remove(likedRef);
+            console.log('Meal removed from favorites');
+            setIsFavorite(false); // Update the state
+      
+            // Remove from local storage
+            await AsyncStorage.removeItem(`liked-${likedMealId}`);
+          } else {
+            // Meal is not liked, so add it
+            await set(likedRef, likedMealData);
+            console.log('Meal added to favorites');
+            setIsFavorite(true); // Update the state
+      
+            // Save to local storage
+            await AsyncStorage.setItem(`liked-${likedMealId}`, JSON.stringify(likedMealData));
+          }
+        } catch (error) {
+          console.error('Error: ', error.message);
+        }
+      };
+      useEffect(() => {
+        const checkIfLiked = async () => {
+          try {
+            const likedMealId = item.idMeal;
+            const isLiked = await AsyncStorage.getItem(`liked-${likedMealId}`);
+            setIsFavorite(!!isLiked); // Update the state
+          } catch (error) {
+            console.error('Error checking if liked: ', error.message);
+          }
+        };
+      
+        checkIfLiked();
+      }, [item.idMeal]);
+            
+      
   return (
    <ScrollView className="bg-white flex-1"
                showsVerticalScrollIndicator={false}
@@ -65,9 +122,15 @@ export default function RecipeDetailScreen(props) {
             <ChevronLeftIcon size={hp(5)} strokeWidth={7} color="rgb(132 204 22)"/>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=>{setIsFavorite(!isFavorite)}} className="p-2 rounded-full mr-5 bg-white">
-            <HeartIcon size={hp(5)} strokeWidth={7} color={isFavorite?"red":"gray"}/>
-        </TouchableOpacity>
+        <TouchableOpacity
+            onPress={() => {
+                likeMeal();
+            }}
+            className="p-2 rounded-full mr-5 bg-white"
+            >
+            <HeartIcon size={hp(5)} strokeWidth={7} color={isFavorite ? 'red' : 'gray'} />
+            </TouchableOpacity>
+
     </Animated.View>
     {
         loading?(
@@ -76,7 +139,7 @@ export default function RecipeDetailScreen(props) {
             <View className="px-4 flex justify-between space-y-4 pt-8">
                 <Animated.View entering={FadeInDown.duration(700).springify().damping(12)} className="space-y-2">
                     <Text style={{fontSize:hp(3)}} className="font-bold flex-1 text-neutral-700">
-                        {meal.strMeal}
+                        {meal.strMeal} 
                     </Text>
                     <Text style={{fontSize:hp(2)}} className="font-bold flex-1 text-neutral-500">
                         {meal.strArea}

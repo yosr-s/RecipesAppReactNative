@@ -10,11 +10,16 @@ import { SparklesIcon as SparklesIconMini } from "react-native-heroicons/mini";
 import Categories from '../components/categories';
 import axios from 'axios';
 import Recipes from '../components/recipes';
+import { useRoute } from '@react-navigation/native'; // Import useRoute
 
 
 
 
-export default function HomeScreen() {
+
+export default function HomeScreen({navigation}) {
+  const route = useRoute(); // Use useRoute to access the route object
+  const { email } = route.params;
+  console.log(email);
   const [activeCategory,setActiveCategory]=useState('Beef');
   const [categories,setCategories]=useState([]); 
   const [meals,setMeals]=useState([]);
@@ -73,13 +78,18 @@ export default function HomeScreen() {
         className="space-y-6 pt-14">
 
           <View className="mx-4 flex-row justify-between item-center mb-2">
-            <Image source={require('../assets/avatar.png')} 
-                    style={{width:hp(5),height:hp(5)}}/>
+
+          <TouchableOpacity onPress={()=>{navigation.navigate("Favoris",email)}}>
+          <Image source={require('../assets/avatar.png')} 
+                              style={{width:hp(5),height:hp(5)}}/>
+          </TouchableOpacity>
+          
+
             <BellIcon size={hp(5)} color="gray"/>
 
           </View>
           <View className="mx-4 space-y-2 mb-2">
-              <Text style={{fontSize:hp(1.7)}} className="text-neutral-600">Hello, User!</Text>
+              <Text style={{fontSize:hp(1.7)}} className="text-neutral-800">{email}</Text>
               <View>
                 <Text style={{fontSize:hp(3.8)}} className="font-semibold text-neutral-600">Make your own food,</Text>
               </View>
@@ -112,7 +122,7 @@ export default function HomeScreen() {
          </View>
          {/* recipes */}
          <View>
-          <Recipes meals={meals}/>
+          <Recipes meals={meals} email={email}/>
          </View>
 
       </ScrollView>
